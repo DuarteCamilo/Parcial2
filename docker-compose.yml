@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/parcial2db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    networks:
+      - spring-mariadb
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=parcial2db
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - spring-mariadb
+
+networks:
+  spring-mariadb:
+    driver: bridge
+
+volumes:
+  mariadb-data:
