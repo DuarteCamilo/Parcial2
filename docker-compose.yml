@@ -2,17 +2,19 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    image: cduarte/parcial2-cars:latest
+    container_name: app-1
     ports:
       - "8080:8080"
     depends_on:
       - mariadb
+    networks:
+      - parcial2-network
+    restart: always
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/parcial2db
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
-    networks:
-      - spring-mariadb
 
   mariadb:
     image: mariadb:latest
@@ -25,10 +27,12 @@ services:
     volumes:
       - mariadb-data:/var/lib/mysql
     networks:
-      - spring-mariadb
+      - parcial2-network
+    restart: always
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
 networks:
-  spring-mariadb:
+  parcial2-network:
     driver: bridge
 
 volumes:
